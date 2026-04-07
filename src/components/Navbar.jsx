@@ -28,7 +28,7 @@ const Navbar = () => {
     {
       name: 'Traffic',
       icon: <MapPin size={18} />,
-      href: '/#traffic',
+      href: '/traffic',
       isRoute: false
     },
     {

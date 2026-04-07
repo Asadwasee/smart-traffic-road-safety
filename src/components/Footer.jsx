@@ -3,7 +3,7 @@ import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { FaShieldAlt } from 'react-icons/fa';
-import { FaBolt } from 'react-icons/fa';
+import { Car } from 'lucide-react';
 
 const Footer = () => {
 
@@ -35,8 +35,12 @@ const Footer = () => {
         {/* About */}
         <motion.div variants={itemVariants} className="space-y-4">
           <div className="flex items-center gap-2">
-            <FaBolt className="text-amber-500" size={24} />
-            <span className="text-2xl font-bold text-white">SmartWay</span>
+            <div className="bg-emerald-500 p-2 rounded-lg">
+            <Car className="text-white" size={24} />
+            </div>
+             <span className="text-xl font-bold text-white tracking-tight">
+              Code<span className="text-emerald-500">Celix</span>
+            </span>
           </div>
 
           <p className="text-slate-400 text-sm">
