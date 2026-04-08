@@ -35,7 +35,7 @@ const Navbar = () => {
       name: 'Routes',
       icon: <AlertCircle size={18} />,
       href: '/routes',
-      isRoute: false
+      isRoute: true
     },
     {
       name: 'Safety Tips',
@@ -103,14 +103,16 @@ const Navbar = () => {
             )
           )}
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-rose-600 hover:bg-rose-500 text-white px-5 py-2 rounded-full flex items-center gap-2 font-semibold shadow-lg shadow-rose-900/20"
-          >
-            <PhoneCall size={18} />
-            Emergency
-          </motion.button>
+          <Link to="/emergency">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-rose-600 hover:bg-rose-500 text-white px-5 py-2 rounded-full flex items-center gap-2 font-semibold shadow-lg shadow-rose-900/20"
+            >
+              <PhoneCall size={18} />
+              Emergency
+            </motion.button>
+          </Link>
 
           <a href="/traffic">
             <motion.button
