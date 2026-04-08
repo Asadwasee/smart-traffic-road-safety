@@ -1,143 +1,179 @@
-import {
-  LOCATIONS, PREDEFINED_ROUTES, ROAD_NAMES, ALT_ROAD_NAMES,
-} from "../data/routeData";
+import { LOCATIONS, PREDEFINED_ROUTES, ROAD_NAMES, ALT_ROAD_NAMES } from "../data/routeData";
 
-/* ─── Tiny deterministic hash so same pair always gives same result ─── */
-function hashStr(s) {
+/* ── Deterministic hash so same pair always yields same result ── */
+function hash(s) {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
-
-function seededRand(seed, min, max) {
+function seeded(seed, min, max) {
   const x = Math.sin(seed + 1) * 10000;
-  const r = x - Math.floor(x);          // 0..1
-  return Math.floor(r * (max - min + 1)) + min;
+  return Math.floor((x - Math.floor(x)) * (max - min + 1)) + min;
 }
 
-/* ─── Straight-line distance in km (Haversine approximation via px) ─── */
-function pixelDistKm(a, b) {
-  const dx = a.mapX - b.mapX;
-  const dy = a.mapY - b.mapY;
-  // 1 px ≈ 0.22 km on our canvas (Lahore ~35 km across, canvas 560 px wide)
-  return +(Math.sqrt(dx * dx + dy * dy) * 0.22).toFixed(1);
+/* ── Pixel → km conversion (640px canvas, Lahore ~36km wide) ── */
+function pxDistKm(a, b) {
+  const dx = a.x - b.x, dy = a.y - b.y;
+  return +((Math.sqrt(dx * dx + dy * dy)) * 0.185).toFixed(1);
 }
 
-/* ─── Traffic level seeded by pair ─── */
-function trafficForPair(seed) {
-  const v = seededRand(seed, 0, 2);
-  return ["low", "medium", "high"][v];
-}
+const SPEED = { low: 44, medium: 27, high: 15 };
 
-/* ─── Speed table (km/h) ─── */
-const SPEED = { low: 45, medium: 28, high: 16 };
-
-/* ─── Main export ─── */
+/* ── Main route finder ── */
 export function findRoute(fromName, toName) {
   if (!fromName || !toName || fromName === toName) return null;
 
-  // Check predefined routes (both directions)
-  const pre = PREDEFINED_ROUTES.find(
-    (r) =>
-      (r.from === fromName && r.to === toName) ||
-      (r.from === toName   && r.to === fromName)
+  const pre = PREDEFINED_ROUTES.find(r =>
+    (r.from === fromName && r.to === toName) ||
+    (r.from === toName   && r.to === fromName)
   );
 
-  const fromLoc = LOCATIONS[fromName];
-  const toLoc   = LOCATIONS[toName];
+  const a       = LOCATIONS[fromName];
+  const b       = LOCATIONS[toName];
+  const dist    = pxDistKm(a, b);
+  const seed    = hash(fromName + toName);
+  const altSeed = hash(toName + fromName + "x7");
+  const level   = pre ? pre.trafficLevel : ["low", "medium", "high"][seeded(seed, 0, 2)];
+  const estTime = Math.max(5, Math.round((dist / SPEED[level]) * 60));
 
-  const dist     = pixelDistKm(fromLoc, toLoc);
-  const seed     = hashStr(fromName + toName);
-  const altSeed  = hashStr(toName + fromName + "alt");
+  const waypoints = pre
+    ? pre.waypoints
+    : [...new Set(
+        Array.from({ length: seeded(seed, 1, 3) }, (_, i) =>
+          ROAD_NAMES[(seed + i * 7) % ROAD_NAMES.length]
+        )
+      )];
 
-  const trafficLevel = pre ? pre.trafficLevel : trafficForPair(seed);
-  const speed        = SPEED[trafficLevel];
-  const estimatedTime = Math.max(5, Math.round((dist / speed) * 60));
-
-  // Build waypoints
-  let waypoints;
-  if (pre) {
-    waypoints = pre.waypoints;
-  } else {
-    const count = seededRand(seed, 1, 3);
-    waypoints = Array.from({ length: count }, (_, i) =>
-      ROAD_NAMES[(seed + i * 7) % ROAD_NAMES.length]
-    );
-    // deduplicate
-    waypoints = [...new Set(waypoints)];
-  }
-
-  // Alternate route
-  const altRoad     = ALT_ROAD_NAMES[altSeed % ALT_ROAD_NAMES.length];
-  const altTimeDiff = seededRand(altSeed, 4, 12);
-  const altTime     = estimatedTime + altTimeDiff;
-
-  // Route label
-  const routeLabel = pre
+  const altRoad = ALT_ROAD_NAMES[altSeed % ALT_ROAD_NAMES.length];
+  const altTime = estTime + seeded(altSeed, 5, 15);
+  const label   = pre
     ? pre.label
     : `${ROAD_NAMES[seed % ROAD_NAMES.length]} → ${waypoints[waypoints.length - 1]}`;
 
   return {
-    from:          fromName,
-    to:            toName,
-    fromCoords:    fromLoc,
-    toCoords:      toLoc,
-    routeName:     routeLabel,
-    distance:      `${dist} km`,
-    estimatedTime,
-    trafficLevel,
+    from: fromName, to: toName,
+    fromCoords: a,  toCoords: b,
+    routeName: label,
+    distance: `${dist} km`,
+    estimatedTime: estTime,
+    trafficLevel: level,
     waypoints,
     alternateRoute: altRoad,
-    alternateTime:  altTime,
+    alternateTime: altTime,
   };
 }
 
-/* ─── Color tokens ─── */
+/* ── Color tokens ── */
 export function getTrafficColor(level) {
-  const map = {
-    low:    { hex: "#10b981", glow: "rgba(16,185,129,0.3)",  bg: "rgba(16,185,129,0.08)",  border: "rgba(16,185,129,0.25)", label: "Low Traffic"      },
-    medium: { hex: "#f59e0b", glow: "rgba(245,158,11,0.3)",  bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.25)", label: "Moderate Traffic"  },
-    high:   { hex: "#f43f5e", glow: "rgba(244,63,94,0.3)",   bg: "rgba(244,63,94,0.08)",   border: "rgba(244,63,94,0.25)", label: "Heavy Traffic"     },
+  const m = {
+    low:    { hex:"#10b981", glow:"rgba(16,185,129,0.3)",  bg:"rgba(16,185,129,0.08)",  border:"rgba(16,185,129,0.25)", label:"Low Traffic"     },
+    medium: { hex:"#f59e0b", glow:"rgba(245,158,11,0.3)",  bg:"rgba(245,158,11,0.08)",  border:"rgba(245,158,11,0.25)", label:"Moderate Traffic" },
+    high:   { hex:"#f43f5e", glow:"rgba(244,63,94,0.3)",   bg:"rgba(244,63,94,0.08)",   border:"rgba(244,63,94,0.25)", label:"Heavy Traffic"    },
   };
-  return map[level] || map.medium;
+  return m[level] || m.medium;
 }
 
-/* ─── Build a realistic-looking SVG path between two map coords ─── */
-export function buildMapPath(fromCoords, toCoords, trafficLevel, waypointCount) {
-  const { mapX: x1, mapY: y1 } = fromCoords;
-  const { mapX: x2, mapY: y2 } = toCoords;
+/* ─────────────────────────────────────────────────────────────────────
+   buildRoutePath — produces a Google-Maps-style multi-segment path
+   with bezier-rounded corners (no sharp L-turns).
 
-  // Clamp to canvas
-  const pad = 30;
-  const cx1 = Math.max(pad, Math.min(530, x1));
-  const cy1 = Math.max(pad, Math.min(310, y1));
-  const cx2 = Math.max(pad, Math.min(530, x2));
-  const cy2 = Math.max(pad, Math.min(310, y2));
+   Canvas: 640 × 400. All coords clamped to 30px padding.
+───────────────────────────────────────────────────────────────────── */
+export function buildRoutePath(from, to, level) {
+  const PAD = 32;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-  // For "high traffic" add a detour jog; for others go corner-route
-  const midX = (cx1 + cx2) / 2;
-  const midY = (cy1 + cy2) / 2;
+  const x1 = clamp(from.x, PAD, 640 - PAD);
+  const y1 = clamp(from.y, PAD, 400 - PAD);
+  const x2 = clamp(to.x,   PAD, 640 - PAD);
+  const y2 = clamp(to.y,   PAD, 400 - PAD);
+
+  const dx   = x2 - x1;
+  const dy   = y2 - y1;
+  const midX = (x1 + x2) / 2;
+  const midY = (y1 + y2) / 2;
+  const R    = 18; // corner bezier radius
+
+  const sx = Math.sign(dx) || 1;
+  const sy = Math.sign(dy) || 1;
 
   let pathD;
-  if (trafficLevel === "high") {
-    // Zigzag detour
-    const jog = waypointCount > 1 ? 35 : 20;
-    pathD = `M ${cx1} ${cy1} L ${cx1} ${midY + jog} L ${midX - jog} ${midY + jog} L ${midX - jog} ${midY - jog} L ${cx2} ${midY - jog} L ${cx2} ${cy2}`;
-  } else if (trafficLevel === "low") {
-    // Clean two-turn L-shape
-    pathD = `M ${cx1} ${cy1} L ${cx1} ${cy2} L ${cx2} ${cy2}`;
+
+  if (level === "low") {
+    /*
+     * Clean 2-turn path: go horizontal to midX, then vertical to y2.
+     *   Start → [corner1] → mid column → [corner2] → End
+     * Rounded with quadratic beziers.
+     */
+    const c1x = midX - sx * R;
+    const c2y = y2   - sy * R;
+
+    pathD = [
+      `M ${x1} ${y1}`,
+      `L ${c1x} ${y1}`,
+      `Q ${midX} ${y1} ${midX} ${y1 + sy * R}`,
+      `L ${midX} ${c2y}`,
+      `Q ${midX} ${y2} ${midX + sx * R} ${y2}`,
+      `L ${x2} ${y2}`,
+    ].join(" ");
+  } else if (level === "medium") {
+    /*
+     * 3-turn path for medium: horizontal third → vertical → horizontal.
+     * More realistic city routing.
+     */
+    const third  = x1 + dx / 3;
+    const twoThird = x1 + (dx * 2) / 3;
+    const midRouteY = midY;
+
+    pathD = [
+      `M ${x1} ${y1}`,
+      `L ${third - sx * R} ${y1}`,
+      `Q ${third} ${y1} ${third} ${y1 + sy * R}`,
+      `L ${third} ${midRouteY - sy * R}`,
+      `Q ${third} ${midRouteY} ${third + sx * R} ${midRouteY}`,
+      `L ${twoThird - sx * R} ${midRouteY}`,
+      `Q ${twoThird} ${midRouteY} ${twoThird} ${midRouteY + sy * R}`,
+      `L ${twoThird} ${y2 - sy * R}`,
+      `Q ${twoThird} ${y2} ${twoThird + sx * R} ${y2}`,
+      `L ${x2} ${y2}`,
+    ].join(" ");
   } else {
-    // Three-segment city-block path
-    pathD = `M ${cx1} ${cy1} L ${cx1} ${midY} L ${cx2} ${midY} L ${cx2} ${cy2}`;
+    /*
+     * High traffic — zigzag detour with 4 turns, like Google Maps
+     * showing a congested route that deviates significantly.
+     */
+    const jog    = Math.min(50, Math.abs(dy) * 0.4);
+    const wx1    = x1 + dx * 0.28;
+    const detoY  = y1 + sy * jog;           // detour bulge
+    const wx2    = x1 + dx * 0.68;
+    const retoY  = y2 - sy * jog;           // return bulge
+
+    pathD = [
+      `M ${x1} ${y1}`,
+      `L ${wx1 - sx * R} ${y1}`,
+      `Q ${wx1} ${y1} ${wx1} ${y1 + sy * R}`,
+      `L ${wx1} ${detoY - sy * R}`,
+      `Q ${wx1} ${detoY} ${wx1 + sx * R} ${detoY}`,
+      `L ${wx2 - sx * R} ${detoY}`,
+      `Q ${wx2} ${detoY} ${wx2} ${detoY + sy * R}`,
+      `L ${wx2} ${retoY - sy * R}`,
+      `Q ${wx2} ${retoY} ${wx2 + sx * R} ${retoY}`,
+      `L ${x2} ${y2}`,
+    ].join(" ");
   }
 
-  return { pathD, startX: cx1, startY: cy1, endX: cx2, endY: cy2, midX, midY };
+  /* Callout bubble position: 40% along the path, shifted up */
+  const calloutRawX = x1 + dx * 0.42;
+  const calloutRawY = y1 + dy * 0.42 - 55;
+  const calloutX = clamp(calloutRawX, 70, 570);
+  const calloutY = clamp(calloutRawY, 18, 340);
+
+  return { pathD, x1, y1, x2, y2, calloutX, calloutY };
 }
 
-/* ─── Format time ─── */
-export function formatTime(minutes) {
-  if (minutes < 60) return `${minutes} min`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+/* ── Format minutes → string ── */
+export function formatTime(m) {
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60), r = m % 60;
+  return r ? `${h}h ${r}m` : `${h}h`;
 }

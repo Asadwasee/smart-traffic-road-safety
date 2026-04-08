@@ -5,11 +5,11 @@ import { getTrafficColor, formatTime } from "../../utils/routeUtils";
 function StatCard({ icon: Icon, label, value, accent, index }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 + index * 0.08, duration: 0.4, ease: "easeOut" }}
+      transition={{ delay: 0.1 + index * 0.08, duration: 0.38 }}
       className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-4
-                 hover:border-slate-700 hover:bg-slate-800/60 transition-all duration-200 group"
+                 hover:border-slate-700 hover:bg-slate-800/60 transition-all duration-200"
     >
       <div className="flex items-center gap-1.5 mb-2">
         <Icon size={12} style={{ color: accent }} />
@@ -22,25 +22,14 @@ function StatCard({ icon: Icon, label, value, accent, index }) {
 
 export default function RouteResult({ route, from, to }) {
   if (!route) return null;
-
-  const traffic = getTrafficColor(route.trafficLevel);
-  const statusLabel =
-    route.trafficLevel === "low"    ? "Smooth Drive"
-    : route.trafficLevel === "medium" ? "Moderate"
-    : "Congested";
+  const traffic     = getTrafficColor(route.trafficLevel);
+  const statusLabel = { low: "Smooth Drive", medium: "Moderate", high: "Congested" }[route.trafficLevel];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="space-y-3"
-    >
-      {/* ── ROUTE HEADER ── */}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+      {/* Header card */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
+        initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
         className="bg-slate-900/70 backdrop-blur-md border border-slate-800 rounded-2xl p-5 shadow-xl shadow-black/20"
       >
         <div className="flex items-start justify-between gap-4 mb-4">
@@ -48,14 +37,12 @@ export default function RouteResult({ route, from, to }) {
             <p className="text-slate-500 text-[10px] uppercase tracking-widest font-semibold mb-1">
               Suggested Route
             </p>
-            <h3 className="text-white font-bold text-sm md:text-base leading-snug truncate">
+            <h3 className="text-white font-bold text-sm md:text-base leading-snug">
               {route.routeName}
             </h3>
           </div>
-          <span
-            className="shrink-0 text-xs px-3 py-1 rounded-full font-semibold border"
-            style={{ color: traffic.hex, borderColor: traffic.border, backgroundColor: traffic.bg }}
-          >
+          <span className="shrink-0 text-xs px-3 py-1 rounded-full font-semibold border"
+            style={{ color: traffic.hex, borderColor: traffic.border, backgroundColor: traffic.bg }}>
             {traffic.label}
           </span>
         </div>
@@ -67,9 +54,7 @@ export default function RouteResult({ route, from, to }) {
             <span className="text-white text-sm font-medium truncate">{from}</span>
           </div>
           <div className="flex items-center gap-1 flex-shrink-0 text-slate-600">
-            <div className="w-4 h-px bg-slate-700" />
-            <ArrowRight size={13} />
-            <div className="w-4 h-px bg-slate-700" />
+            <div className="w-4 h-px bg-slate-700" /><ArrowRight size={13} /><div className="w-4 h-px bg-slate-700" />
           </div>
           <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
             <span className="text-white text-sm font-medium truncate">{to}</span>
@@ -78,7 +63,7 @@ export default function RouteResult({ route, from, to }) {
         </div>
       </motion.div>
 
-      {/* ── STATS GRID ── */}
+      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard index={0} icon={Clock}      label="Est. Time"  value={formatTime(route.estimatedTime)} accent="#10b981" />
         <StatCard index={1} icon={Navigation} label="Distance"   value={route.distance}                  accent="#f59e0b" />
@@ -86,12 +71,10 @@ export default function RouteResult({ route, from, to }) {
         <StatCard index={3} icon={Activity}   label="Status"     value={statusLabel}                     accent={traffic.hex} />
       </div>
 
-      {/* ── ALTERNATE ROUTE ── */}
+      {/* Alternate route */}
       {route.alternateRoute && (
         <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.45, duration: 0.4 }}
+          initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
           className="bg-slate-900/70 backdrop-blur-sm border border-slate-700/50 border-dashed
                      rounded-xl px-5 py-4 flex items-center justify-between gap-4"
         >
