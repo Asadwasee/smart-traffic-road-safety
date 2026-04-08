@@ -34,7 +34,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/traffic" element={<TrafficMapSection />} />
-        <Route path="/route-suggestion" element={<RouteSuggestion />} />
+        <Route path="/routes" element={<RouteSuggestion />} />
         <Route path="/road-safety" element={<RoadSafetyPage />} />
       </Routes>
 

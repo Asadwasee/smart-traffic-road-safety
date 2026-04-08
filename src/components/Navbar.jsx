@@ -34,7 +34,7 @@ const Navbar = () => {
     {
       name: 'Routes',
       icon: <AlertCircle size={18} />,
-      href: '/#routes',
+      href: '/routes',
       isRoute: false
     },
     {
