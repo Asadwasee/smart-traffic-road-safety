@@ -57,7 +57,7 @@ const Navbar = () => {
       }`}
     >
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500 origin-left"
+        className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 origin-left"
         style={{ scaleX: scrollYProgress }}
       />
 
@@ -112,7 +112,7 @@ const Navbar = () => {
             Emergency
           </motion.button>
 
-          <a href="/#traffic">
+          <a href="/traffic">
             <motion.button
               whileHover={{
                 scale: 1.05,
@@ -177,7 +177,7 @@ const Navbar = () => {
                 <PhoneCall size={18} /> Emergency Help
               </button>
 
-              <a href="/#traffic" onClick={() => setIsOpen(false)}>
+              <a href="/traffic" onClick={() => setIsOpen(false)}>
                 <button className="w-full bg-emerald-500 text-white p-3 rounded-xl font-bold">
                   Check Traffic
                 </button>
