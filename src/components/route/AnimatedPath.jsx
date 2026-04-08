@@ -349,6 +349,7 @@ export default function AnimatedPath({ route, isVisible }) {
           {/* ══════════════════════════════════════
               ACTIVE ROUTE LAYER
           ══════════════════════════════════════ */}
+           
           {isVisible && cleanPath && (
             <>
               {/* Hidden path for length measurement */}
