@@ -15,7 +15,6 @@ export default function RouteForm({ onSubmit, isLoading }) {
   };
 
   const swap = () => { setFrom(to); setTo(from); setError(""); };
-
   const sel =
     "w-full bg-slate-800/80 border border-slate-700 text-white rounded-xl " +
     "px-4 py-3.5 pl-11 appearance-none text-sm cursor-pointer " +
