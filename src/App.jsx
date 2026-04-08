@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import TrafficMapSection from './components/TrafficMapSection'
 import RoadSafetyPage from './pages/RoadSafetyPage'
+import RouteSuggestion from './pages/RouteSuggestion';
 
 
 function HomePage() {
@@ -33,6 +34,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/traffic" element={<TrafficMapSection />} />
+        <Route path="/route-suggestion" element={<RouteSuggestion />} />
         <Route path="/road-safety" element={<RoadSafetyPage />} />
       </Routes>
 
