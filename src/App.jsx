@@ -1,34 +1,28 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import TrafficMapSection from './components/TrafficMapSection'
-import RoadSafetyPage from './pages/RoadSafetyPage'
-import RouteSuggestion from './pages/RouteSuggestion';
-import Hero from './components/Hero';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-function HomePage() {
-  return (
-    <div className="bg-slate-950 text-white">
-      <Hero />
-    </div>
-  );
-}
+// Import Pages
+import HomePage from "./pages/HomePage";
+import TrafficMapSection from "./components/TrafficMapSection";
+import EmergencyPage from "./pages/EmergencyPage";
+import RoadSafetyPage from "./pages/RoadSafetyPage";
+import RoutesPage from "./pages/RoutesPage";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar /> 
-      
+    <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/traffic" element={<TrafficMapSection />} />
-        <Route path="/routes" element={<RouteSuggestion />} />
+        <Route path="/emergency" element={<EmergencyPage />} />
         <Route path="/road-safety" element={<RoadSafetyPage />} />
+        <Route path="/routes" element={<RoutesPage />} />
       </Routes>
-
       <Footer />
-    </BrowserRouter>
-  )
+    </Router>
+  );
 }
-
-export default App
+export default App;
