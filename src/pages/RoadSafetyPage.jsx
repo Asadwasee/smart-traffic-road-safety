@@ -1,15 +1,11 @@
-import { motion } from 'framer-motion'
-import { ShieldCheck, ArrowLeft } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import RoadSafetyTips from '../components/RoadSafetyTips'
+import { motion } from "framer-motion";
+import { ShieldCheck, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+import RoadSafetyTips from "../components/RoadSafetyTips";
 
 export default function RoadSafetyPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <Navbar />
-
       {/* ── Hero Banner ── */}
       <section className="relative overflow-hidden bg-slate-950 px-6 pt-36 pb-0">
         {/* Background glows */}
@@ -21,8 +17,8 @@ export default function RoadSafetyPage() {
           className="pointer-events-none absolute inset-0 opacity-[0.035]"
           style={{
             backgroundImage:
-              'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-            backgroundSize: '28px 28px'
+              "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
           }}
         />
 
@@ -31,7 +27,7 @@ export default function RoadSafetyPage() {
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: 'easeOut' }}
+            transition={{ duration: 0.65, ease: "easeOut" }}
           >
             {/* Badge */}
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-2 text-sm text-emerald-200">
@@ -77,13 +73,13 @@ export default function RoadSafetyPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.25, ease: 'easeOut' }}
+            transition={{ duration: 0.65, delay: 0.25, ease: "easeOut" }}
             className="mt-14 grid grid-cols-3 gap-4 sm:gap-6"
           >
             {[
-              { value: '1.35M+', label: 'Deaths annually' },
-              { value: '50M+', label: 'Injuries per year' },
-              { value: '90%', label: 'Are preventable' }
+              { value: "1.35M+", label: "Deaths annually" },
+              { value: "50M+", label: "Injuries per year" },
+              { value: "90%", label: "Are preventable" },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -108,8 +104,6 @@ export default function RoadSafetyPage() {
       <main>
         <RoadSafetyTips />
       </main>
-
-      <Footer />
     </div>
-  )
+  );
 }
