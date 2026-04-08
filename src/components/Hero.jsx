@@ -1,30 +1,32 @@
 import { motion } from "framer-motion";
+import { Car, BotMessageSquare, Zap } from "lucide-react"; // Import Icons
 
 export default function Hero() {
   const lanes = [
-    { id: 1, speedL: 4, speedR: 5, delayL: 0, delayR: 1, colorL: "bg-green-400", shadowL: "rgba(74,222,128,0.8)", colorR: "bg-red-500", shadowR: "rgba(239,68,68,0.8)" },
-    { id: 2, speedL: 6, speedR: 4, delayL: 2, delayR: 0.5, colorL: "bg-blue-400", shadowL: "rgba(96,165,250,0.8)", colorR: "bg-orange-500", shadowR: "rgba(249,115,22,0.8)" },
-    { id: 3, speedL: 3.5, speedR: 6, delayL: 1, delayR: 2.5, colorL: "bg-teal-400", shadowL: "rgba(45,212,191,0.8)", colorR: "bg-pink-500", shadowR: "rgba(236,72,153,0.8)" },
-    { id: 4, speedL: 5, speedR: 4.5, delayL: 0.5, delayR: 1.5, colorL: "bg-purple-400", shadowL: "rgba(192,132,252,0.8)", colorR: "bg-yellow-500", shadowR: "rgba(234,179,8,0.8)" },
-    { id: 5, speedL: 4.5, speedR: 3.5, delayL: 1.5, delayR: 0, colorL: "bg-green-400", shadowL: "rgba(74,222,128,0.8)", colorR: "bg-red-500", shadowR: "rgba(239,68,68,0.8)" },
+    { id: 1, speedL: 5, speedR: 6, delayL: 0, delayR: 1.5, colorL: "text-emerald-400", shadowL: "0 0 15px rgba(52,211,153,0.7)", colorR: "text-rose-500", shadowR: "0 0 15px rgba(244,63,94,0.7)" },
+    { id: 2, speedL: 7, speedR: 5, delayL: 2.5, delayR: 0.8, colorL: "text-sky-400", shadowL: "0 0 15px rgba(56,189,248,0.7)", colorR: "text-amber-500", shadowR: "0 0 15px rgba(251,191,36,0.7)" },
+    { id: 3, speedL: 4.5, speedR: 7.5, delayL: 1.2, delayR: 3, colorL: "text-teal-400", shadowL: "0 0 15px rgba(45,212,191,0.7)", colorR: "text-pink-500", shadowR: "0 0 15px rgba(236,72,153,0.7)" },
+    { id: 4, speedL: 6, speedR: 5.5, delayL: 0.8, delayR: 2, colorL: "text-violet-400", shadowL: "0 0 15px rgba(167,139,250,0.7)", colorR: "text-yellow-400", shadowR: "0 0 15px rgba(250,204,21,0.7)" },
+    { id: 5, speedL: 5.5, speedR: 4, delayL: 2, delayR: 0.5, colorL: "text-emerald-400", shadowL: "0 0 15px rgba(52,211,153,0.7)", colorR: "text-rose-500", shadowR: "0 0 15px rgba(244,63,94,0.7)" },
   ];
 
   return (
-    <section className="relative h-screen flex items-center justify-center pt-20 bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center pt-24 bg-[#020617] text-white overflow-hidden font-sans">
       
-      {/* 🔹 BACKGROUND TRAFFIC ANIMATION */}
+      {/* 🔹 DYNAMIC ROAD BACKGROUND ANIMATION */}
       <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
-        <div className="absolute inset-0 flex flex-col justify-evenly transform -skew-y-12 scale-125">
+        <div className="absolute inset-0 flex flex-col justify-evenly transform -skew-y-12 scale-150">
           {lanes.map((lane) => (
-            <div key={lane.id} className="relative w-full h-16 border-y border-white/5 bg-slate-800/20 flex items-center">
-              {/* Lane Divider */}
-              <div className="absolute w-full h-[2px] opacity-20" style={{ backgroundImage: 'linear-gradient(90deg, #fff 50%, transparent 50%)', backgroundSize: '40px 100%' }}></div>
+            <div key={lane.id} className="relative w-full h-24 border-y border-white/5 bg-slate-900/30 flex items-center">
               
-              {/* Car moving Left to Right */}
+              {/* Central Dashed Road Line */}
+              <div className="absolute w-full h-[2px] opacity-10" style={{ backgroundImage: 'linear-gradient(90deg, #fff 50%, transparent 50%)', backgroundSize: '60px 100%' }}></div>
+              
+              {/* Car moving Left to Right (Top Half) */}
               <motion.div
-                className={`absolute w-16 h-2 ${lane.colorL} rounded-full`}
-                style={{ top: "10px", boxShadow: `0 0 20px ${lane.shadowL}` }}
-                initial={{ left: "-10%" }}
+                className={`absolute ${lane.colorL}`}
+                style={{ top: "15%", filter: `drop-shadow(${lane.shadowL})` }}
+                initial={{ left: "-10%", rotateY: 0 }}
                 animate={{ left: "110%" }}
                 transition={{
                   duration: lane.speedL,
@@ -32,12 +34,15 @@ export default function Hero() {
                   ease: "linear",
                   delay: lane.delayL,
                 }}
-              />
-              {/* Car moving Right to Left */}
+              >
+                <Car size={36} fill="currentColor" fillOpacity={0.15} strokeWidth={1.5} />
+              </motion.div>
+
+              {/* Car moving Right to Left (Bottom Half) */}
               <motion.div
-                className={`absolute w-20 h-2 ${lane.colorR} rounded-full`}
-                style={{ bottom: "10px", boxShadow: `0 0 20px ${lane.shadowR}` }}
-                initial={{ right: "-10%" }}
+                className={`absolute ${lane.colorR}`}
+                style={{ bottom: "15%", filter: `drop-shadow(${lane.shadowR})` }}
+                initial={{ right: "-10%", rotateY: 180 }} // Flip car horizontally to face left
                 animate={{ right: "110%" }}
                 transition={{
                   duration: lane.speedR,
@@ -45,46 +50,66 @@ export default function Hero() {
                   ease: "linear",
                   delay: lane.delayR,
                 }}
-              />
+              >
+                <Car size={36} fill="currentColor" fillOpacity={0.15} strokeWidth={1.5} />
+              </motion.div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 🔹 HERO CONTENT */}
-      <div className="relative z-10 text-center px-6 max-w-3xl backdrop-blur-sm bg-black/20 p-8 rounded-3xl border border-white/10 shadow-2xl">
+      {/* HERO CONTENT */}
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 text-center px-6 max-w-4xl backdrop-blur-xl bg-black/10 p-12 rounded-[50px] border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)]"
+      >
         
-        <motion.h1
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg"
+        <motion.div
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
-          Smart Traffic & <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Road Safety</span>
-        </motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tighter"
+          >
+            Smart Traffic & <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-green-500 to-teal-400 animate-pulse">
+              Road Safety
+            </span> 🚦
+          </motion.h1>
+        </motion.div>
 
         <motion.p
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mt-6 text-gray-200 text-lg md:text-xl font-medium drop-shadow-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="mt-8 text-slate-200 text-xl md:text-xl font-light leading-relaxed max-w-2xl mx-auto"
         >
-          Check traffic conditions, find safer routes, and improve road awareness
-          with our smart city solution.
+          Leveraging AI analytics for optimized urban mobility and real-time safety insights.
         </motion.p>
 
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="mt-8 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-lg font-bold rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center justify-center gap-2 mx-auto"
-        >
-          <span className="text-xl">🚦</span> Check Traffic
-        </motion.button>
+        <div className="mt-12 flex flex-wrap justify-center gap-5">
+          <motion.button
+            whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(16,185,129,0.5)" }}
+            whileTap={{ scale: 0.95 }}
+            className="px-10 py-4 bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white text-lg font-bold rounded-2xl transition-all flex items-center gap-3 shadow-lg"
+          >
+            <Zap size={24} className="text-amber-300" />
+            Check Live Traffic
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.12)" }}
+            className="px-12 py-5 border border-white/20 text-white text-xl font-bold rounded-2xl backdrop-blur-sm"
+          >
+            Explore Map
+          </motion.button>
+        </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }
