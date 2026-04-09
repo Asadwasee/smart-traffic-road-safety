@@ -1,7 +1,3 @@
-Here’s a **clean, professional, no-nonsense README.md** based on your actual project scope *and* team structure. No fluff, no fake claims.
-
----
-
 # 🚦 Smart Traffic & Road Safety Web App
 
 ## 📌 Overview
