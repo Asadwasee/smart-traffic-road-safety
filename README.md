@@ -320,5 +320,3 @@ npm run dev
 This project is developed for educational purposes and academic evaluation.
 
 ---
-
-If you want, I can **upgrade this to a killer GitHub-level README** (with badges, screenshots, live demo section, and proper formatting) — but only if your UI actually deserves it.
