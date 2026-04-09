@@ -562,10 +562,10 @@ export default function EmergencySection() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white font-sans">
+    <div className="min-h-screen text-white font-sans pt-20">
 
       {/* ── HERO ── */}
-      <div className="px-4 pt-10 pb-4 bg-gradient-to-b from-gray-900 to-gray-950">
+      <div className="px-4 pt-28 pb-4 bg-gradient-to-b from-[#0b1a2b] to-gray-950 -mt-20">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
