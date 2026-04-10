@@ -1,6 +1,4 @@
-import Navbar from '../components/Navbar'
 import EmergencySection from './EmergencySection'
-import Footer from '../components/Footer'
 
 export default function EmergencyPage() {
   return (
