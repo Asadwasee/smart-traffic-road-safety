@@ -8,14 +8,14 @@ function StatCard({ icon: Icon, label, value, accent, index }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 + index * 0.08, duration: 0.38 }}
-      className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-4
-                 hover:border-slate-700 hover:bg-slate-800/60 transition-all duration-200"
+      className="bg-slate-50 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-xl p-4
+                 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800/60 transition-all duration-200"
     >
       <div className="flex items-center gap-1.5 mb-2">
         <Icon size={12} style={{ color: accent }} />
         <span className="text-slate-500 text-xs font-medium">{label}</span>
       </div>
-      <span className="text-white font-bold text-lg leading-tight block">{value}</span>
+      <span className="text-slate-900 dark:text-white font-bold text-lg leading-tight block">{value}</span>
     </motion.div>
   );
 }
@@ -30,14 +30,14 @@ export default function RouteResult({ route, from, to }) {
       {/* Header card */}
       <motion.div
         initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/70 backdrop-blur-md border border-slate-800 rounded-2xl p-5 shadow-xl shadow-black/20"
+        className="bg-white dark:bg-slate-900/70 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xl dark:shadow-black/20 transition-colors duration-500"
       >
         <div className="flex items-start justify-between gap-4 mb-4">
           <div className="min-w-0">
-            <p className="text-slate-500 text-[10px] uppercase tracking-widest font-semibold mb-1">
+            <p className="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-widest font-semibold mb-1">
               Suggested Route
             </p>
-            <h3 className="text-white font-bold text-sm md:text-base leading-snug">
+            <h3 className="text-slate-900 dark:text-white font-bold text-sm md:text-base leading-snug">
               {route.routeName}
             </h3>
           </div>
@@ -48,16 +48,16 @@ export default function RouteResult({ route, from, to }) {
         </div>
 
         {/* Journey line */}
-        <div className="flex items-center gap-3 bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3">
+        <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 rounded-xl px-4 py-3">
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0 shadow-lg shadow-emerald-500/40" />
-            <span className="text-white text-sm font-medium truncate">{from}</span>
+            <span className="text-slate-900 dark:text-white text-sm font-medium truncate">{from}</span>
           </div>
-          <div className="flex items-center gap-1 flex-shrink-0 text-slate-600">
-            <div className="w-4 h-px bg-slate-700" /><ArrowRight size={13} /><div className="w-4 h-px bg-slate-700" />
+          <div className="flex items-center gap-1 flex-shrink-0 text-slate-400 dark:text-slate-600">
+            <div className="w-4 h-px bg-slate-200 dark:bg-slate-700" /><ArrowRight size={13} /><div className="w-4 h-px bg-slate-200 dark:bg-slate-700" />
           </div>
           <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-            <span className="text-white text-sm font-medium truncate">{to}</span>
+            <span className="text-slate-900 dark:text-white text-sm font-medium truncate">{to}</span>
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500 flex-shrink-0 shadow-lg shadow-rose-500/40" />
           </div>
         </div>
@@ -83,10 +83,10 @@ export default function RouteResult({ route, from, to }) {
               <Zap size={12} className="text-amber-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-slate-500 text-[10px] uppercase tracking-widest font-semibold mb-0.5">
+              <p className="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-widest font-semibold mb-0.5">
                 Alternate Route
               </p>
-              <p className="text-slate-300 text-sm font-medium truncate">{route.alternateRoute}</p>
+              <p className="text-slate-700 dark:text-slate-300 text-sm font-medium truncate">{route.alternateRoute}</p>
             </div>
           </div>
           <div className="text-right flex-shrink-0">

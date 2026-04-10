@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { buildRoutePath, getTrafficColor, formatTime } from "../../utils/routeUtils";
 import { LOCATIONS } from "../../data/routeData";
+import { useTheme } from "../../utils/ThemeProvider";
 
 /* ═══════════════════════════════════════════════════════════
    LAHORE MAP BACKGROUND — Google Maps light palette
@@ -226,6 +227,9 @@ function MovingDot({ pathD, dotColor, animKey }) {
    MAIN EXPORT
 ═══════════════════════════════════════════════════════════ */
 export default function AnimatedPath({ route, isVisible }) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const measureRef = useRef(null);
   const [pathLen, setPathLen] = useState(600);
   const [animKey, setAnimKey] = useState(0);
@@ -257,10 +261,10 @@ export default function AnimatedPath({ route, isVisible }) {
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 14 }}
       transition={{ duration: 0.4 }}
-      className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700/60"
+      className="rounded-2xl overflow-hidden shadow-2xl dark:shadow-black/50 border border-slate-200 dark:border-slate-700/60 transition-colors duration-500"
     >
-      {/* ── Top bar (dark, matches the project UI) ── */}
-      <div className="flex items-center justify-between px-5 py-3 bg-slate-900 border-b border-slate-800">
+      {/* ── Top bar (adaptive) ── */}
+      <div className="flex items-center justify-between px-5 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div className="flex items-center gap-2.5">
           <motion.span
             className="w-2.5 h-2.5 rounded-full"
@@ -268,9 +272,9 @@ export default function AnimatedPath({ route, isVisible }) {
             animate={{ scale: [1, 1.4, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
-          <span className="text-white text-sm font-bold tracking-tight">Route Map</span>
+          <span className="text-slate-900 dark:text-white text-sm font-bold tracking-tight">Route Map</span>
           {route && (
-            <span className="text-slate-400 text-xs ml-1 hidden sm:inline">
+            <span className="text-slate-500 dark:text-slate-400 text-xs ml-1 hidden sm:inline">
               {route.from} → {route.to}
             </span>
           )}
@@ -283,18 +287,18 @@ export default function AnimatedPath({ route, isVisible }) {
         </span>
       </div>
 
-      {/* ── MAP CANVAS (Google Maps light palette) ── */}
-      <div style={{ background: "#e8e3db", position: "relative" }}>
+      {/* ── MAP CANVAS (Adaptive Google Maps palette) ── */}
+      <div style={{ background: isDark ? "#242f3e" : "#e8e3db", position: "relative" }} className="transition-colors duration-500">
         <svg viewBox="0 0 640 400" className="w-full block" style={{ maxHeight: 340 }}>
           <defs>
             <linearGradient id="waterFill" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stopColor="#b3d1e8" />
-              <stop offset="100%" stopColor="#9dc7e2" />
+              <stop offset="0%"   stopColor={isDark ? "#1a2a3e" : "#b3d1e8"} />
+              <stop offset="100%" stopColor={isDark ? "#141d2b" : "#9dc7e2"} />
             </linearGradient>
           </defs>
 
           {/* ── Base land ── */}
-          <rect width="640" height="400" fill="#e8e3db" />
+          <rect width="640" height="400" fill={isDark ? "#242f3e" : "#e8e3db"} />
 
           {/* ── Parks ── */}
           {PARKS.map((p, i) => (
@@ -336,7 +340,10 @@ export default function AnimatedPath({ route, isVisible }) {
           {LABELS.map((l, i) => (
             <text key={i} x={l.x} y={l.y}
               textAnchor="middle"
-              fill={l.bold ? "#8a8070" : "#aca398"}
+              fill={isDark 
+                ? (l.bold ? "#9ca3af" : "#6b7280") 
+                : (l.bold ? "#8a8070" : "#aca398")
+              }
               fontSize={l.s}
               fontFamily="'DM Sans', 'Segoe UI', system-ui, sans-serif"
               fontWeight={l.bold ? "700" : "500"}
@@ -475,7 +482,7 @@ export default function AnimatedPath({ route, isVisible }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="px-5 py-3 bg-slate-900 border-t border-slate-800 flex flex-wrap gap-2"
+            className="px-5 py-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-wrap gap-2 transition-colors duration-500"
           >
             <span className="text-slate-500 text-xs self-center mr-1 font-medium">Via:</span>
             {route.waypoints.map((wp, i) => (
@@ -484,7 +491,7 @@ export default function AnimatedPath({ route, isVisible }) {
                 initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.5 + i * 0.12 }}
-                className="text-xs text-slate-300 bg-slate-800 border border-slate-700
+                className="text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700
                            px-2.5 py-1 rounded-full flex items-center gap-1.5"
               >
                 <span className="w-1.5 h-1.5 rounded-full inline-block"
