@@ -16,25 +16,25 @@ export default function RouteForm({ onSubmit, isLoading }) {
 
   const swap = () => { setFrom(to); setTo(from); setError(""); };
   const sel =
-    "w-full bg-slate-800/80 border border-slate-700 text-white rounded-xl " +
+    "w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl " +
     "px-4 py-3.5 pl-11 appearance-none text-sm cursor-pointer " +
     "focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/40 " +
-    "hover:border-slate-600 transition-all duration-200";
+    "hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
-      className="bg-slate-900/70 backdrop-blur-md border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl shadow-black/30"
+      className="bg-white dark:bg-slate-900/70 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl dark:shadow-black/30 transition-colors duration-500"
     >
       <div className="flex items-center gap-3 mb-6">
         <div className="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
           <MapPin className="text-emerald-400" size={18} />
         </div>
         <div>
-          <h3 className="text-white font-bold text-base tracking-tight">Plan Your Route</h3>
-          <p className="text-slate-500 text-xs mt-0.5">AI-powered path suggestion for Lahore</p>
+          <h3 className="text-slate-900 dark:text-white font-bold text-base tracking-tight">Plan Your Route</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">AI-powered path suggestion for Lahore</p>
         </div>
       </div>
 
@@ -51,8 +51,8 @@ export default function RouteForm({ onSubmit, isLoading }) {
           whileHover={{ scale: 1.12, rotate: 180 }} whileTap={{ scale: 0.9 }}
           transition={{ duration: 0.25 }} onClick={swap}
           className="hidden md:flex w-10 h-10 flex-shrink-0 items-center justify-center
-                     rounded-full border border-slate-700 bg-slate-800
-                     text-slate-500 hover:text-emerald-400 hover:border-emerald-500/40 transition-colors"
+                     rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800
+                     text-slate-500 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 hover:border-emerald-500/40 transition-colors"
         >
           <ArrowLeftRight size={14} />
         </motion.button>

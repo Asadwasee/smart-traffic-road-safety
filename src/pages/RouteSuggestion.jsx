@@ -5,6 +5,8 @@ import RouteForm    from "../components/route/RouteForm";
 import AnimatedPath from "../components/route/AnimatedPath";
 import RouteResult  from "../components/route/RouteResult";
 import { findRoute } from "../utils/routeUtils";
+import ScrollReveal from "../components/ScrollReveal";
+import ParallaxSection from "../components/ParallaxSection";
 
 export default function RouteSuggestion() {
   const [route,      setRoute]      = useState(null);
@@ -32,44 +34,47 @@ export default function RouteSuggestion() {
      * at the /routes path directly.
      * pt-24 accounts for the fixed Navbar height.
      */
-    <div className="bg-slate-950 min-h-screen pt-24 pb-20 relative overflow-hidden">
+    <div className="bg-white dark:bg-slate-950 min-h-screen pt-24 pb-20 relative overflow-hidden transition-colors duration-500">
 
       {/* Ambient glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[220px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(16,185,129,0.055) 0%, transparent 70%)" }} />
-      <div className="absolute bottom-0 right-0 w-[450px] h-[260px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(99,102,241,0.04) 0%, transparent 70%)" }} />
+      <ParallaxSection speed={0.12}>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[220px] pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(16,185,129,0.055) 0%, transparent 70%)" }} />
+      </ParallaxSection>
+      <ParallaxSection speed={-0.08}>
+        <div className="absolute bottom-0 right-0 w-[450px] h-[260px] pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(99,102,241,0.04) 0%, transparent 70%)" }} />
+      </ParallaxSection>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
 
         {/* ── Page header ── */}
-        <motion.div
-          initial={{ opacity: 0, y: -14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-10"
-        >
-          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20
-                          rounded-full px-4 py-1.5 mb-5">
-            <Zap size={11} className="text-emerald-400" />
-            <span className="text-emerald-400 text-xs font-bold tracking-widest uppercase">
-              AI Route Planner
-            </span>
-          </div>
+        <ScrollReveal blur={true} distance={30}>
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20
+                            rounded-full px-4 py-1.5 mb-5">
+              <Zap size={11} className="text-emerald-400" />
+              <span className="text-emerald-400 text-xs font-bold tracking-widest uppercase">
+                AI Route Planner
+              </span>
+            </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3">
-            Smart Route <span className="text-emerald-400">Suggestion</span>
-          </h1>
-          <p className="text-slate-400 text-sm md:text-base max-w-md mx-auto leading-relaxed">
-            Get the fastest, safest path with Google Maps-style visualization
-            and real-time traffic analysis for Lahore.
-          </p>
-        </motion.div>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
+              Smart Route <span className="text-emerald-500 dark:text-emerald-400">Suggestion</span>
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-md mx-auto leading-relaxed">
+              Get the fastest, safest path with Google Maps-style visualization
+              and real-time traffic analysis for Lahore.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* ── Search form ── */}
-        <div className="mb-6">
-          <RouteForm onSubmit={handleSubmit} isLoading={isLoading} />
-        </div>
+        <ScrollReveal delay={0.2} distance={20} blur={true}>
+          <div className="mb-6">
+            <RouteForm onSubmit={handleSubmit} isLoading={isLoading} />
+          </div>
+        </ScrollReveal>
 
         {/* ── States ── */}
         <AnimatePresence mode="wait">
@@ -91,8 +96,8 @@ export default function RouteSuggestion() {
                 </div>
               </div>
               <div className="text-center">
-                <p className="text-white text-sm font-semibold">Calculating optimal route…</p>
-                <p className="text-slate-500 text-xs mt-1">Analysing live traffic conditions</p>
+                <p className="text-slate-900 dark:text-white text-sm font-semibold">Calculating optimal route…</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">Analysing live traffic conditions</p>
               </div>
             </motion.div>
           )}
@@ -136,7 +141,7 @@ export default function RouteSuggestion() {
               className="flex flex-col items-center justify-center py-20 gap-3 text-center"
             >
               <span className="text-5xl opacity-20 select-none">🗺️</span>
-              <p className="text-slate-600 text-sm">
+              <p className="text-slate-400 dark:text-slate-600 text-sm">
                 Choose a start and destination above to see your route
               </p>
             </motion.div>

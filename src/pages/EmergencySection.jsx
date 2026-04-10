@@ -8,6 +8,9 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useTheme } from "../utils/ThemeProvider";
+import ScrollReveal from "../components/ScrollReveal";
+import ParallaxSection from "../components/ParallaxSection";
 
 // Fix leaflet default icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -681,7 +684,8 @@ function StatCards() {
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function EmergencySection() {
-  const [darkMode, setDarkMode] = useState(true);
+  const { theme, toggleTheme } = useTheme();
+  const darkMode = theme === "dark";
   const [showAlert, setShowAlert] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -702,117 +706,97 @@ export default function EmergencySection() {
   }
 
   return (
-    <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-gray-950 text-white font-sans">
-        {/* ── NAVBAR ── */}
-        <nav className="sticky top-0 z-40 flex items-center justify-between px-4 h-14 bg-gray-900 border-b border-white/5">
-          <div className="flex items-center gap-2 font-bold text-base">
-            <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-base">🚦</div>
-            TrafficOS
-          </div>
-          <div className="hidden sm:flex gap-1">
-            {["Dashboard", "Emergency", "Routes", "Reports"].map((l, i) => (
-              <button
-                key={l}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  i === 1
-                    ? "text-red-400 bg-red-500/10"
-                    : "text-gray-400 hover:text-white hover:bg-gray-800"
-                }`}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="w-8 h-8 rounded-lg border border-white/10 bg-transparent text-gray-400 hover:bg-gray-800 text-sm flex items-center justify-center transition-colors"
-            >
-              {darkMode ? "🌙" : "☀️"}
-            </button>
-            <button
-              onClick={() => setShowAlert(true)}
-              className="w-8 h-8 rounded-lg border border-red-500/30 bg-transparent text-red-400 hover:bg-red-500/10 text-sm flex items-center justify-center transition-colors"
-            >
-              ⚠
-            </button>
-          </div>
-        </nav>
+    <div>
+  return (
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white font-sans transition-colors duration-500">
+      {/* ── HERO ── */}
 
         {/* ── HERO ── */}
-        <div className="px-4 pt-10 pb-4 bg-gradient-to-b from-gray-900 to-gray-950">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/12 border border-red-500/30 text-red-400 text-xs font-bold uppercase tracking-wider mb-4">
-              <motion.span
-                className="w-1.5 h-1.5 rounded-full bg-red-500"
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-              />
-              Emergency Active
+        <div className="px-4 pt-10 pb-4 bg-gradient-to-b from-slate-50 to-white dark:from-gray-900 dark:to-gray-950 transition-colors duration-500 relative overflow-hidden">
+          <ParallaxSection speed={-0.1}>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+          </ParallaxSection>
+          
+          <ScrollReveal blur={true} distance={20}>
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-500 dark:text-red-400 text-xs font-bold uppercase tracking-wider mb-4">
+                <motion.span
+                  className="w-1.5 h-1.5 rounded-full bg-red-500"
+                  animate={{ opacity: [1, 0.3, 1] }}
+                  transition={{ duration: 1.2, repeat: Infinity }}
+                />
+                Emergency Active
+              </div>
+              <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-3 text-slate-900 dark:text-white">
+                Traffic{" "}
+                <span className="text-red-500 dark:text-red-400">Emergency</span>
+                <br />Control Center
+              </h1>
+              <p className="text-slate-600 dark:text-gray-400 text-sm max-w-md leading-relaxed mb-6">
+                Real-time monitoring, instant dispatch, and route optimization for
+                emergency vehicles across the city.
+              </p>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-3">
-              Traffic{" "}
-              <span className="text-red-400">Emergency</span>
-              <br />Control Center
-            </h1>
-            <p className="text-gray-400 text-sm max-w-md leading-relaxed mb-6">
-              Real-time monitoring, instant dispatch, and route optimization for
-              emergency vehicles across the city.
-            </p>
-          </motion.div>
+          </ScrollReveal>
 
-          <RoadStrip />
-          <StatCards />
+          <ScrollReveal delay={0.2} blur={true} distance={30}>
+            <RoadStrip />
+          </ScrollReveal>
+          
+          <ScrollReveal delay={0.4} blur={true} distance={40}>
+            <StatCards />
+          </ScrollReveal>
         </div>
 
         {/* ── EMERGENCY BUTTONS ── */}
-        <section className="px-4 pb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-lg font-bold">Quick Dispatch</h2>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-red-500/12 border border-red-500/25 text-red-400 font-bold uppercase tracking-wider">
-              Emergency
-            </span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {EMERGENCY_BUTTONS.map((btn) => (
-              <EmergencyButton key={btn.id} btn={btn} onDispatch={handleDispatch} />
-            ))}
-          </div>
-        </section>
+        <ScrollReveal delay={0.6} blur={true} distance={30}>
+          <section className="px-4 pb-6 mt-6">
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Quick Dispatch</h2>
+              <span className="text-xs px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/25 text-red-500 dark:text-red-400 font-bold uppercase tracking-wider">
+                Emergency
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {EMERGENCY_BUTTONS.map((btn) => (
+                <EmergencyButton key={btn.id} btn={btn} onDispatch={handleDispatch} />
+              ))}
+            </div>
+          </section>
+        </ScrollReveal>
 
         {/* ── ROUTE ── */}
-        <section className="px-4 pb-2">
-          <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-lg font-bold">Live Route Tracking</h2>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/12 border border-amber-500/25 text-amber-400 font-bold uppercase tracking-wider">
-              Navigation
-            </span>
-          </div>
-          <RouteAnimation />
-        </section>
+        <ScrollReveal delay={0.8} blur={true} distance={30}>
+          <section className="px-4 pb-2">
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Live Route Tracking</h2>
+              <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-500 dark:text-amber-400 font-bold uppercase tracking-wider">
+                Navigation
+              </span>
+            </div>
+            <RouteAnimation />
+          </section>
+        </ScrollReveal>
 
         {/* ── VOICE ── */}
-        <section className="px-4 pb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-lg font-bold">Voice Command</h2>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-green-500/12 border border-green-500/25 text-green-400 font-bold uppercase tracking-wider">
-              AI Input
-            </span>
-          </div>
-          <VoiceInput />
-        </section>
+        <ScrollReveal delay={1.0} blur={true} distance={30}>
+          <section className="px-4 pb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Voice Command</h2>
+              <span className="text-xs px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/25 text-green-500 dark:text-green-400 font-bold uppercase tracking-wider">
+                AI Input
+              </span>
+            </div>
+            <VoiceInput />
+          </section>
+        </ScrollReveal>
 
         {/* ── FOOTER WITH CLOCK ── */}
-        <footer className="px-4 py-5 bg-gray-900 border-t border-white/5">
+        <footer className="px-4 py-5 bg-slate-50 dark:bg-gray-900 border-t border-slate-200 dark:border-white/5 transition-colors duration-500">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <DigitalClock />
-            <div className="flex items-center gap-3 text-xs text-gray-500">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/25 text-green-400 font-bold">
+            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-gray-500">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/25 text-green-500 dark:text-green-400 font-bold">
                 <motion.span
                   className="w-1.5 h-1.5 rounded-full bg-green-500"
                   animate={{ opacity: [1, 0.3, 1] }}
