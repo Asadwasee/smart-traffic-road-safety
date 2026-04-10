@@ -1,18 +1,49 @@
-# React + Vite
+# Smart Traffic and Road Safety Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional, high-end dashboard for urban mobility management and road safety monitoring. This application features a comprehensive theme system and advanced scroll-triggered animations to provide a premium user experience.
 
-Currently, two official plugins are available:
+## System Architecture
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The following diagram illustrates the integration of the theme management and animation systems.
 
-## React Compiler
+```mermaid
+graph TD
+    A[ThemeProvider Context] --> B[Theme State Management]
+    B --> C[LocalStorage Persistence]
+    B --> D[HTML Root Class Toggle]
+    D --> E[Tailwind CSS v4 Utility Classes]
+    
+    F[Scroll Container] --> G[ScrollReveal Wrapper]
+    G --> H[Framer Motion Animation]
+    H --> I[Blur and Entrance Effects]
+    
+    J[GSAP ScrollTrigger] --> K[ParallaxSection]
+    K --> L[Independent Background Movement]
+```
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Core Features
 
-Note: This will impact Vite dev & build performances.
+| Feature | Technical Description | Implementation |
+|---------|----------------------|----------------|
+| Global Theme System | Dynamic light and dark mode switching with persistent user preference. | React Context API, LocalStorage, and documentElement class manipulation. |
+| Scroll Entrance Animations | Blurry and smooth entrance effects for UI components as they enter the viewport. | Framer Motion integration with useInView hooks. |
+| Parallax Sections | Multi-layered depth effects driven by scroll position for background decorations. | GSAP ScrollTrigger orchestration. |
+| Traffic Monitoring | Real-time map visualization and traffic density analytics. | React Leaflet and Tailwind CSS v4 styling. |
+| Emergency Management | Dedicated center for emergency dispatch and incident tracking. | Modular route suggestion and emergency contact system. |
 
-## Expanding the ESLint configuration
+## Technical Implementation Details
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Design Language
+The project utilizes a glassmorphism design language, characterized by background blurs, subtle borders, and harmonious color palettes. The transition between light and dark modes is handled globally via CSS variables and Tailwind dark mode variants.
+
+### Animation Strategy
+1. Entrance Reveals: Components use the ScrollReveal wrapper to animate opacity, scale, and blur-radius upon entering the viewport.
+2. Background Parallax: Strategic decorative elements use GSAP to move at different speeds relative to the scroll, creating an illusion of depth.
+3. Hover Interactions: Interactive elements include micro-animations for feedback, enhancing the tactile feel of the interface.
+
+## Project Structure
+
+- src/utils/ThemeProvider.jsx: Centralized theme logic.
+- src/components/ScrollReveal.jsx: Standardized entrance animation component.
+- src/components/ParallaxSection.jsx: Advanced parallax wrapper.
+- src/index.css: Root styles and Tailwind v4 configuration.
